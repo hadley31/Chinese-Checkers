@@ -153,6 +153,8 @@ function mouseReleased ()
 	{
 		tile.team = currentTile.team;
 		currentTile.team = 0;
+		
+		changeTurn ();
 	}
 
 	currentTile = undefined;
