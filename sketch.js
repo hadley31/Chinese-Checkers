@@ -65,7 +65,7 @@ function draw ()
 	if (debugMove)
 	{
 		textAlign (LEFT, TOP);
-		text ("DEBUG MOVE", 0, 0);
+		text ("DEBUG MODE", 0, 0);
 	}
 	
 	textAlign (RIGHT, TOP);
