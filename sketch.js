@@ -68,6 +68,9 @@ function draw ()
 		text ("DEBUG MOVE", 0, 0);
 	}
 	
+	textAlign (RIGHT, TOP);
+	text ("PLAYER COUNT: " + playerCount + "\nCURRENT TURN: " + currentTurn, CANVAS_WIDTH, 0);
+	
 	for (let i = 0; i < grid.length; i++)
 	{
 		if (grid[i] != undefined)
