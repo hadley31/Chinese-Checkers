@@ -64,7 +64,7 @@ function draw ()
 		fill (255);
 		
 		textAlign (LEFT, TOP);
-		textSize (20);
+		textSize (40);
 		text ("DEBUG MOVE", 0, 0);
 	}
 	
@@ -276,7 +276,7 @@ function Tile (x, y)
 		if (showDebugText)
 		{
 			let color = getColor (this.piece);
-			if (brightness(color) < 125)
+			if (brightness(color) < 10)
 			{
 				fill (255);
 			}
@@ -286,7 +286,7 @@ function Tile (x, y)
 			}
 			
 			textAlign (CENTER, CENTER);
-			textSize (10);
+			textSize (radius * 0.7);
 			
 			text (getIndex (this.x, this.y) + "\n" + this.x + " , " + this.y, this.showX, this.showY);
 		}
