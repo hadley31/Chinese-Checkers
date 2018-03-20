@@ -64,7 +64,7 @@ function draw ()
 		fill (255);
 		
 		textAlign (LEFT, TOP);
-		textSize (40);
+		textSize (30);
 		text ("DEBUG MOVE", 0, 0);
 	}
 	
@@ -289,7 +289,7 @@ function Tile (x, y)
 			}
 			
 			textAlign (CENTER, CENTER);
-			textSize (radius * 0.7);
+			textSize (radius * 0.5);
 			
 			text (getIndex (this.x, this.y) + "\n" + this.x + " , " + this.y, this.showX, this.showY);
 		}
