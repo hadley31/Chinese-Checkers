@@ -59,6 +59,15 @@ function draw ()
 	
 	background(51);
 
+	if (debugMove)
+	{
+		fill (255);
+		
+		textAlign (LEFT, TOP);
+		textSize (20);
+		text ("DEBUG MOVE", 0, 0);
+	}
+	
 	for (let i = 0; i < grid.length; i++)
 	{
 		if (grid[i] != undefined)
@@ -277,7 +286,8 @@ function Tile (x, y)
 			}
 			
 			textAlign (CENTER, CENTER);
-
+			textSize (10);
+			
 			text (getIndex (this.x, this.y) + "\n" + this.x + " , " + this.y, this.showX, this.showY);
 		}
 	};
