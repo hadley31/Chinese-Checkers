@@ -123,7 +123,7 @@ function init ()
 	}
 	
 	
-	currentTurn = 1;
+	currentTurn = Team.GREEN;
 }
 
 function mousePressed ()
