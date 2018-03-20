@@ -489,9 +489,9 @@ function drawPiece (x, y, piece)
 	ellipse (x, y, radius * 2 * pieceRadiusMultiplier);
 }
 
-function getColor (color)
+function getColor (piece)
 {
-	switch (color)
+	switch (piece)
 	{
 		default:
 		case 0:
