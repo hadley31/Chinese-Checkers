@@ -41,7 +41,7 @@ let radius = 25;
 let pieceRadiusMultiplier = 0.8;
 
 let debugMove = false;
-let showDebugText = false;
+let showDebugCoordinates = false;
 
 let playerCount = 2;
 let currentTurn;
@@ -69,7 +69,7 @@ function draw ()
 	}
 	
 	textAlign (RIGHT, TOP);
-	text ("PLAYER COUNT: " + playerCount + "\nCURRENT TURN: " + currentTurn, CANVAS_WIDTH, 0);
+	text ("PLAYERS: " + playerCount + "\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
 	
 	for (let i = 0; i < grid.length; i++)
 	{
@@ -175,7 +175,7 @@ function mouseReleased ()
 		tile.piece = currentTile.piece;
 		currentTile.piece = NO_PIECE;
 		
-		changeTurn ();
+		nextTurn ();
 	}
 
 	currentTile = undefined;
@@ -190,36 +190,46 @@ function keyPressed ()
 		case 27: // Escape
 			setup ();
 			break;
-		case 49: // Alpha 1
+		case 68: // D
 			debugMove = !debugMove;
 			break;
-		case 50: // Alpha 2
-			showDebugText = !showDebugText;
+		case 67: // C
+			showDebugCoordinates = !showDebugCoordinates;
 			break;
-		case 96: // Keypad 0
-		case 97: // Keypad 1
+		case 49: // Alpha 1
 			playerCount = 0;
 			break;
-		case 98: // Keypad 2
+		case 50: // Alpha 2
 			playerCount = 2;
 			break;
-		case 99: // Keypad 3
+		case 51: // Alpha 3
 			playerCount = 3;
 			break;
-		case 100: // Keypad 4
+		case 52: // Alpha 4
 			playerCount = 4;
 			break;
-		case 102: // Keypad 6
+		case 54: // Alpha 6
 			playerCount = 6;
+			break;
+		case 78:
+			nextTurn ();
 			break;
 	}
 }
 
-function changeTurn ()
+function nextTurn ()
 {
 	currentTurn++;
 	
 	if (currentTurn > playerCount)
+		currentTurn = 1;
+}
+
+function setTurn (value)
+{
+	currentTurn = value;
+	
+	if (currentTurn > playerCount || currentTurn < 0)
 		currentTurn = 1;
 }
 
@@ -276,7 +286,7 @@ function Tile (x, y)
 			drawPiece (this.showX, this.showY, this.piece);
 		}
 		
-		if (showDebugText)
+		if (showDebugCoordinates)
 		{
 			let color = getColor (this.piece);
 			if (brightness_value(color) < 125)
@@ -335,9 +345,6 @@ function Tile (x, y)
 				if (newT != undefined && newT.piece == NO_PIECE)
 				{
 					possible.push (newT);
-
-				// 	this shit just aint working so leave it out for now
-				//	print (newT.x + " " + newT.y);
 					possible = this.getPossibleMovesRec (newT, possible);
 				}
 			}
