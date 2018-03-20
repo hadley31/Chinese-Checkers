@@ -123,13 +123,13 @@ function init ()
 	}
 	
 	
-	currentTurn = 0;
+	currentTurn = 1;
 }
 
 function mousePressed ()
 {
 	let tile = getTileUnderMouse();
-	if (tile != undefined && tile.team != 0)
+	if (tile != undefined && tile.team != Team.NONE && hasControl (tile.team))
 	{
 		currentTile = tile;
 		possibleMoves = currentTile.getPossibleMoves ();
@@ -164,28 +164,29 @@ function keyPressed ()
 {
 	switch (keyCode)
 	{
-		case 13:
+		case 27: // Escape
 			setup ();
 			break;
-		case 49:
+		case 49: // Alpha 1
 			debugMove = !debugMove;
 			break;
-		case 50:
+		case 50: // Alpha 2
 			showDebugText = !showDebugText;
 			break;
-		case 97:
+		case 96: // Keypad 0
+		case 97: // Keypad 1
 			playerCount = 0;
 			break;
-		case 98:
+		case 98: // Keypad 2
 			playerCount = 2;
 			break;
-		case 99:
+		case 99: // Keypad 3
 			playerCount = 3;
 			break;
-		case 100:
+		case 100: // Keypad 4
 			playerCount = 4;
 			break;
-		case 102:
+		case 102: // Keypad 6
 			playerCount = 6;
 			break;
 	}
@@ -356,11 +357,98 @@ function validMove (from, to)
 
 	if (to.team != Team.NONE)
 		return false;
-
+	
 	if (possibleMoves.indexOf (to) == -1)
 		return false;
 	
 	return true;
+}
+
+function hasControl (team)
+{
+	if (debugMove || playerCount < 2 || currentTurn == Team.NONE)
+	{
+		return true;
+	}
+	if (currentTurn == 1)
+	{
+		if (playerCount == 2)
+		{
+			return team == Team.GREEN || team == Team.WHITE || team == Team.BLUE;
+		}
+		if (playerCount == 3)
+		{
+			return team == Team.GREEN || team == Team.BLUE;
+		}
+		if (playerCount == 4)
+		{
+			return team == Team.WHITE;
+		}
+		if (playerCount == 6)
+		{
+			return team == Team.GREEN;
+		}
+	}
+	if (currentTurn == 2)
+	{
+		if (playerCount == 2)
+		{
+			return team == Team.RED || team == Team.YELLOW || team == Team.BLACK;
+		}
+		if (playerCount == 3)
+		{
+			return team == Team.BLACK || team == Team.RED;
+		}
+		if (playerCount == 4)
+		{
+			return team == Team.BLUE;
+		}
+		if (playerCount == 6)
+		{
+			return team == Team.BLUE;
+		}
+	}
+	if (currentTurn == 3)
+	{
+		if (playerCount == 3)
+		{
+			return team == Team.YELLOW || team == Team.WHITE;
+		}
+		if (playerCount == 4)
+		{
+			return team == Team.BLACK;
+		}
+		if (playerCount == 6)
+		{
+			return team == Team.BLACK;
+		}
+	}
+	if (currentTurn == 4)
+	{
+		if (playerCount == 4)
+		{
+			return team == Team.YELLOW;
+		}
+		if (playerCount == 6)
+		{
+			return team == Team.RED;
+		}
+	}
+	if (currentTurn == 5)
+	{
+		if (playerCount == 6)
+		{
+			return team == Team.YELLOW;
+		}
+	}
+	if (currentTurn == 6)
+	{
+		if (playerCount == 6)
+		{
+			return team == Team.WHITE;
+		}
+	}
+	return false;
 }
 
 function drawPiece (x, y, team)
