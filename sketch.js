@@ -59,10 +59,10 @@ function draw ()
 	
 	background(51);
 
+	fill (255);
+	
 	if (debugMove)
 	{
-		fill (255);
-		
 		textAlign (LEFT, TOP);
 		textSize (30);
 		text ("DEBUG MOVE", 0, 0);
