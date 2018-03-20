@@ -149,6 +149,18 @@ function mouseReleased ()
 	return false;
 }
 
+function keyPressed ()
+{
+	if (keyCode == 49)
+	{
+		debugMove = !debugMove;
+	}
+	if (keyCode == 50)
+	{
+		showDebugText = !showDebugText;
+	}
+}
+
 function getIndex (x, y)
 {
 	if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT)
