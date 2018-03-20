@@ -275,8 +275,10 @@ function Tile (x, y)
 			{
 				fill (0);
 			}
+			
+			textAlign (CENTER, CENTER);
 
-			text (getIndex (this.x, this.y) + "\n" + this.x + " , " + this.y, this.showX - 10, this.showY - 10, this.showX, this.showY);
+			text (getIndex (this.x, this.y) + "\n" + this.x + " , " + this.y, this.showX, this.showY);
 		}
 	};
 
