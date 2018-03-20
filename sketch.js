@@ -1,21 +1,30 @@
 
 //#region Constants
 
-const TILE_START_INDICES = [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
-const ROW_SIZES = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1];
+const TILE_START_INDICES	= [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
+const ROW_SIZES 		= [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1];
 
-const CANVAS_WIDTH = 750;
-const CANVAS_HEIGHT = 750;
+const CANVAS_WIDTH 		= 750;
+const CANVAS_HEIGHT 		= 750;
 
-const GRID_WIDTH = 13;
-const GRID_HEIGHT = 17;
+const GRID_WIDTH 		= 13;
+const GRID_HEIGHT 		= 17;
 
-const RED_START = [6, 18, 19, 31, 32, 33, 43, 44, 45, 46];
-const BLACK_START = [61, 62, 63, 64, 74, 75, 76, 88, 89, 101];
-const BLUE_START = [127, 140, 141, 152, 153, 154, 165, 166, 167, 168];
-const GREEN_START = [173, 174, 175, 176, 187, 188, 189, 200, 201, 214];
-const WHITE_START = [118, 131, 132, 143, 144, 145, 156, 157, 158, 159];
-const YELLOW_START = [52, 53, 54, 55, 65, 66, 67, 79, 80, 92];
+const NO_PIECE 			= 0;
+const GREEN_PIECE 		= 1;
+const BLUE_PIECE 		= 2;
+const BLACK_PIECE 		= 3;
+const RED_PIECE 		= 4;
+const YELLOW_PIECE 		= 5;
+const WHITE_PIECE 		= 6;
+
+const GREEN_START 		= [173, 174, 175, 176, 187, 188, 189, 200, 201, 214];
+const BLUE_START 		= [127, 140, 141, 152, 153, 154, 165, 166, 167, 168];
+const BLACK_START 		= [61, 62, 63, 64, 74, 75, 76, 88, 89, 101];
+const RED_START 		= [6, 18, 19, 31, 32, 33, 43, 44, 45, 46];
+const YELLOW_START 		= [52, 53, 54, 55, 65, 66, 67, 79, 80, 92];
+const WHITE_START 		= [118, 131, 132, 143, 144, 145, 156, 157, 158, 159];
+
 
 const sqrt3 = 1.73205080757;
 
@@ -70,7 +79,7 @@ function draw ()
 			ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius);
 		}
 
-		drawPiece (mouseX, mouseY, currentTile.team);
+		drawPiece (mouseX, mouseY, currentTile.piece);
 	}
 }
 
@@ -94,42 +103,42 @@ function init ()
 
 	for (let i = 0; i < RED_START.length; i++)
 	{
-		grid[RED_START[i]].team = Team.RED;
+		grid[RED_START[i]].piece = RED_PIECE;
 	}
 
 	for (let i = 0; i < BLACK_START.length; i++)
 	{
-		grid[BLACK_START[i]].team = Team.BLACK;
+		grid[BLACK_START[i]].piece = BLACK_PIECE;
 	}
 
 	for (let i = 0; i < BLUE_START.length; i++)
 	{
-		grid[BLUE_START[i]].team = Team.BLUE;
+		grid[BLUE_START[i]].piece = BLUE_PIECE;
 	}
 
 	for (let i = 0; i < GREEN_START.length; i++)
 	{
-		grid[GREEN_START[i]].team = Team.GREEN;
+		grid[GREEN_START[i]].piece = GREEN_PIECE;
 	}
 
 	for (let i = 0; i < WHITE_START.length; i++)
 	{
-		grid[WHITE_START[i]].team = Team.WHITE;
+		grid[WHITE_START[i]].piece = WHITE_PIECE;
 	}
 
 	for (let i = 0; i < YELLOW_START.length; i++)
 	{
-		grid[YELLOW_START[i]].team = Team.YELLOW;
+		grid[YELLOW_START[i]].piece = YELLOW_PIECE;
 	}
 	
 	
-	currentTurn = Team.GREEN;
+	currentTurn = 1;
 }
 
 function mousePressed ()
 {
 	let tile = getTileUnderMouse();
-	if (tile != undefined && tile.team != Team.NONE && hasControl (tile.team))
+	if (tile != undefined && tile.piece != NO_PIECE && hasControl (tile.piece))
 	{
 		currentTile = tile;
 		possibleMoves = currentTile.getPossibleMoves ();
@@ -151,8 +160,8 @@ function mouseReleased ()
 	let tile = getTileUnderMouse ();
 	if (validMove (currentTile, tile))
 	{
-		tile.team = currentTile.team;
-		currentTile.team = 0;
+		tile.piece = currentTile.piece;
+		currentTile.piece = NO_PIECE;
 		
 		changeTurn ();
 	}
@@ -198,7 +207,7 @@ function changeTurn ()
 {
 	currentTurn++;
 	
-	if (currentTurn > Team.WHITE)
+	if (currentTurn > playerCount)
 		currentTurn = 1;
 }
 
@@ -234,7 +243,7 @@ function Tile (x, y)
 	this.y = y;
 	this.showX = this.y % 2 == 0 ? this.x * radius * 2 + offsetX : this.x * radius * 2 + radius + offsetX;
 	this.showY = this.y * radius * sqrt3 + offsetY;
-	this.team = 0;
+	this.piece = 0;
 
 	this.withinRange = function (x, y)
 	{
@@ -250,14 +259,14 @@ function Tile (x, y)
 		fill (150);
 		ellipse (this.showX, this.showY, radius * 2);
 
-		if (this.team != 0 && this != currentTile)
+		if (this.piece != 0 && this != currentTile)
 		{
-			drawPiece (this.showX, this.showY, this.team);
+			drawPiece (this.showX, this.showY, this.piece);
 		}
 		
 		if (showDebugText)
 		{
-			let color = getTeamColor (this.team);
+			let color = getColor (this.piece);
 			if (brightness(color[0], color[1], color[2]) < 1)
 			{
 				fill (255);
@@ -300,7 +309,7 @@ function Tile (x, y)
 				continue;
 			}
 
-			if (adj[i].team == Team.NONE)
+			if (adj[i].piece == NO_PIECE)
 			{
 				possible.push (adj[i]);
 			}
@@ -308,7 +317,7 @@ function Tile (x, y)
 			{
 				let newT = adj[i].getAdjacentTiles ()[i];
 
-				if (newT != undefined && newT.team == Team.NONE)
+				if (newT != undefined && newT.piece == NO_PIECE)
 				{
 					possible.push (newT);
 
@@ -335,7 +344,7 @@ function Tile (x, y)
 				continue;
 			}
 
-			if (adj[i].team == Team.NONE)
+			if (adj[i].piece == NO_PIECE)
 			{
 				continue;
 			}
@@ -347,7 +356,7 @@ function Tile (x, y)
 				continue;
 			}
 			
-			if (next != undefined && next.team == Team.NONE)
+			if (next != undefined && next.piece == NO_PIECE)
 			{
 				possible = next.getPossibleMovesRec (next, possible);
 			}
@@ -365,7 +374,7 @@ function validMove (from, to)
 	if (debugMove)
 		return true;
 
-	if (to.team != Team.NONE)
+	if (to.piece != NO_PIECE)
 		return false;
 	
 	if (possibleMoves.indexOf (to) == -1)
@@ -374,9 +383,9 @@ function validMove (from, to)
 	return true;
 }
 
-function hasControl (team)
+function hasControl (piece)
 {
-	if (debugMove || playerCount < 2 || currentTurn == Team.NONE)
+	if (debugMove || playerCount < 2)
 	{
 		return true;
 	}
@@ -384,103 +393,93 @@ function hasControl (team)
 	{
 		if (playerCount == 2)
 		{
-			return team == Team.GREEN || team == Team.WHITE || team == Team.BLUE;
+			return piece == GREEN_PIECE || piece == WHITE_PIECE || piece == BLUE_PIECE;
 		}
 		if (playerCount == 3)
 		{
-			return team == Team.GREEN || team == Team.BLUE;
+			return piece == GREEN_PIECE || piece == BLUE_PIECE;
 		}
 		if (playerCount == 4)
 		{
-			return team == Team.WHITE;
+			return piece == WHITE_PIECE;
 		}
 		if (playerCount == 6)
 		{
-			return team == Team.GREEN;
+			return piece == GREEN_PIECE;
 		}
 	}
 	if (currentTurn == 2)
 	{
 		if (playerCount == 2)
 		{
-			return team == Team.RED || team == Team.YELLOW || team == Team.BLACK;
+			return piece == RED_PIECE || piece == YELLOW_PIECE || piece == BLACK_PIECE;
 		}
 		if (playerCount == 3)
 		{
-			return team == Team.BLACK || team == Team.RED;
+			return piece == BLACK_PIECE || piece == RED_PIECE;
 		}
 		if (playerCount == 4)
 		{
-			return team == Team.BLUE;
+			return piece == BLUE_PIECE;
 		}
 		if (playerCount == 6)
 		{
-			return team == Team.BLUE;
+			return piece == BLUE_PIECE;
 		}
 	}
 	if (currentTurn == 3)
 	{
 		if (playerCount == 3)
 		{
-			return team == Team.YELLOW || team == Team.WHITE;
+			return piece == YELLOW_PIECE || piece == WHITE_PIECE;
 		}
 		if (playerCount == 4)
 		{
-			return team == Team.BLACK;
+			return piece == BLACK_PIECE;
 		}
 		if (playerCount == 6)
 		{
-			return team == Team.BLACK;
+			return piece == BLACK_PIECE;
 		}
 	}
 	if (currentTurn == 4)
 	{
 		if (playerCount == 4)
 		{
-			return team == Team.YELLOW;
+			return piece == YELLOW_PIECE;
 		}
 		if (playerCount == 6)
 		{
-			return team == Team.RED;
+			return piece == RED_PIECE;
 		}
 	}
 	if (currentTurn == 5)
 	{
 		if (playerCount == 6)
 		{
-			return team == Team.YELLOW;
+			return piece == YELLOW_PIECE;
 		}
 	}
 	if (currentTurn == 6)
 	{
 		if (playerCount == 6)
 		{
-			return team == Team.WHITE;
+			return piece == WHITE_PIECE;
 		}
 	}
 	return false;
 }
 
-function drawPiece (x, y, team)
+function drawPiece (x, y, piece)
 {
-	let color = getTeamColor (team);
+	let color = getColor (piece);
 	fill (color[0], color[1], color[2]);
 	ellipse (x, y, radius * 2 * pieceRadiusMultiplier);
 }
 
-let Team = {
-	NONE: 0,
-	GREEN: 1,
-	BLUE: 2,
-	BLACK: 3,
-	RED: 4,
-	YELLOW: 5,
-	WHITE: 6
-};
-
-function getTeamColor (team)
+function getColor (color)
 {
-	switch (team)
+	switch (color)
 	{
 		default:
 		case 0:
