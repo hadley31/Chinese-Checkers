@@ -91,8 +91,8 @@ function draw ()
 				continue;
 
 			
-			fill (0, 255, 0, 100);
-			ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius);
+			fill (getColor (currentTile.piece));
+			ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius * 0.5);
 		}
 
 		drawPiece (mouseX, mouseY, currentTile.piece);
