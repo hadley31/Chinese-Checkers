@@ -279,7 +279,7 @@ function Tile (x, y)
 		if (showDebugText)
 		{
 			let color = getColor (this.piece);
-			if (brightness(color) < 10)
+			if (brightness_value(color) < 125)
 			{
 				fill (255);
 			}
@@ -396,6 +396,11 @@ function validMove (from, to)
 		return false;
 	
 	return true;
+}
+
+function brightness_value (c)
+{
+	return 0.2126*red(c) + 0.7152*green(c) + 0.0722*blue(c);	
 }
 
 function hasControl (piece)
