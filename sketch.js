@@ -192,6 +192,13 @@ function keyPressed ()
 	}
 }
 
+function changeTurn ()
+{
+	currentTurn++;
+	
+	if (currentTurn > Team.WHITE;
+}
+
 function getIndex (x, y)
 {
 	if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT)
@@ -460,12 +467,12 @@ function drawPiece (x, y, team)
 
 let Team = {
 	NONE: 0,
-	RED: 1,
-	BLACK: 2,
-	BLUE: 3,
-	GREEN: 4,
-	WHITE: 5,
-	YELLOW: 6,
+	GREEN: 1,
+	BLUE: 2,
+	BLACK: 3,
+	RED: 4,
+	YELLOW: 5,
+	WHITE: 6
 };
 
 function getTeamColor (team)
@@ -476,16 +483,16 @@ function getTeamColor (team)
 		case 0:
 			return [0, 0, 0];
 		case 1:
-			return [255, 0, 0];
-		case 2:
-			return [0, 0, 0];
-		case 3:
-			return [0, 0, 255];
-		case 4:
 			return [0, 255, 0];
+		case 2:
+			return [0, 0, 255];
+		case 3:
+			return [0, 0, 0];
+		case 4:
+			return [255, 0, 0];
 		case 5:
-			return [255, 255, 255];
-		case 6:
 			return [255, 235, 4];
+		case 6:
+			return [255, 255, 255];
 	}
 }
