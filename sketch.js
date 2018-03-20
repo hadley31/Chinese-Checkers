@@ -71,6 +71,10 @@ function draw ()
 	textAlign (RIGHT, TOP);
 	text ("PLAYERS: " + playerCount + "\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
 	
+	textSize (15);
+	textAlign (RIGHT, BOTTOM);
+	text ("Keybinds: \nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N", CANVAS_WIDTH, CANVAS_HEIGHT);
+	
 	for (let i = 0; i < grid.length; i++)
 	{
 		if (grid[i] != undefined)
