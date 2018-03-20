@@ -276,7 +276,7 @@ function Tile (x, y)
 		if (showDebugText)
 		{
 			let color = getColor (this.piece);
-			if (brightness(color) < 1)
+			if (brightness(color) < 125)
 			{
 				fill (255);
 			}
