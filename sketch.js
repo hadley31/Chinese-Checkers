@@ -198,7 +198,8 @@ function changeTurn ()
 {
 	currentTurn++;
 	
-	if (currentTurn > Team.WHITE;
+	if (currentTurn > Team.WHITE)
+		currentTurn = 1;
 }
 
 function getIndex (x, y)
