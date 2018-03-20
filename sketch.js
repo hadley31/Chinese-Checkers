@@ -276,7 +276,7 @@ function Tile (x, y)
 		if (showDebugText)
 		{
 			let color = getColor (this.piece);
-			if (brightness(color[0], color[1], color[2]) < 1)
+			if (brightness(color) < 1)
 			{
 				fill (255);
 			}
@@ -485,7 +485,7 @@ function hasControl (piece)
 function drawPiece (x, y, piece)
 {
 	let color = getColor (piece);
-	fill (color[0], color[1], color[2]);
+	fill (color);
 	ellipse (x, y, radius * 2 * pieceRadiusMultiplier);
 }
 
@@ -495,18 +495,18 @@ function getColor (color)
 	{
 		default:
 		case 0:
-			return [0, 0, 0];
+			return color(0, 0, 0);
 		case 1:
-			return [0, 255, 0];
+			return color(0, 255, 0);
 		case 2:
-			return [0, 0, 255];
+			return color(0, 0, 255);
 		case 3:
-			return [0, 0, 0];
+			return color(0, 0, 0);
 		case 4:
-			return [255, 0, 0];
+			return color(255, 0, 0);
 		case 5:
-			return [255, 235, 4];
+			return color(255, 235, 4);
 		case 6:
-			return [255, 255, 255];
+			return color(255, 255, 255);
 	}
 }
