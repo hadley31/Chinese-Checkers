@@ -34,10 +34,48 @@ let pieceRadiusMultiplier = 0.8;
 let debugMove = false;
 let showDebugText = false;
 
+let playerCount = 2;
+let currentTurn;
+
 function setup ()
 {
 	createCanvas (CANVAS_WIDTH, CANVAS_HEIGHT);
+	
+	init();
+}
 
+function draw ()
+{
+	// draw
+	
+	background(51);
+
+	for (let i = 0; i < grid.length; i++)
+	{
+		if (grid[i] != undefined)
+		{
+			grid[i].show ();
+		}
+	}
+
+	if (currentTile != undefined)
+	{
+		for (i = 0; i < possibleMoves.length; i++)
+		{
+			if (possibleMoves[i] == undefined)
+				continue;
+
+			
+			fill (0, 255, 0, 100);
+			ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius);
+		}
+
+		drawPiece (mouseX, mouseY, currentTile.team);
+	}
+}
+
+function init ()
+{	
 	grid = new Array (GRID_WIDTH * GRID_HEIGHT);
 
 	offsetX = CANVAS_WIDTH / 2 - 6 * radius * 2;
@@ -83,36 +121,9 @@ function setup ()
 	{
 		grid[YELLOW_START[i]].team = Team.YELLOW;
 	}
-}
-
-function draw ()
-{
-	// draw
 	
-	background(51);
-
-	for (let i = 0; i < grid.length; i++)
-	{
-		if (grid[i] != undefined)
-		{
-			grid[i].show ();
-		}
-	}
-
-	if (currentTile != undefined)
-	{
-		for (i = 0; i < possibleMoves.length; i++)
-		{
-			if (possibleMoves[i] == undefined)
-				continue;
-
-			
-			fill (0, 255, 0, 100);
-			ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius);
-		}
-
-		drawPiece (mouseX, mouseY, currentTile.team);
-	}
+	
+	currentTurn = 0;
 }
 
 function mousePressed ()
@@ -151,13 +162,32 @@ function mouseReleased ()
 
 function keyPressed ()
 {
-	if (keyCode == 49)
+	switch (keyCode)
 	{
-		debugMove = !debugMove;
-	}
-	if (keyCode == 50)
-	{
-		showDebugText = !showDebugText;
+		case 13:
+			setup ();
+			break;
+		case 49:
+			debugMove = !debugMove;
+			break;
+		case 50:
+			showDebugText = !showDebugText;
+			break;
+		case 97:
+			playerCount = 0;
+			break;
+		case 98:
+			playerCount = 2;
+			break;
+		case 99:
+			playerCount = 3;
+			break;
+		case 100:
+			playerCount = 4;
+			break;
+		case 102:
+			playerCount = 6;
+			break;
 	}
 }
 
