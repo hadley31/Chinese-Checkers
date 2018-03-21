@@ -73,7 +73,7 @@ function draw ()
 	
 	textSize (15);
 	textAlign (RIGHT, BOTTOM);
-	text ("Keybinds: \nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N", CANVAS_WIDTH, CANVAS_HEIGHT);
+	text ("Keybinds: \nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N", CANVAS_WIDTH - 5, CANVAS_HEIGHT);
 	
 	for (let i = 0; i < grid.length; i++)
 	{
@@ -201,7 +201,7 @@ function keyPressed ()
 			showDebugCoordinates = !showDebugCoordinates;
 			break;
 		case 49: // Alpha 1
-			playerCount = 0;
+			playerCount = 1;
 			break;
 		case 50: // Alpha 2
 			playerCount = 2;
