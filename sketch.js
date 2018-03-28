@@ -25,6 +25,7 @@ const RED_START 		= [6, 18, 19, 31, 32, 33, 43, 44, 45, 46];
 const YELLOW_START 		= [52, 53, 54, 55, 65, 66, 67, 79, 80, 92];
 const WHITE_START 		= [118, 131, 132, 143, 144, 145, 156, 157, 158, 159];
 
+const KEYBINDS_TEXT = "Keybinds:\nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N\nShow Moves: S"
 
 const sqrt3 = 1.73205080757;
 
@@ -42,6 +43,7 @@ let pieceRadiusMultiplier = 0.8;
 
 let debugMove = false;
 let showDebugCoordinates = false;
+let showAllPossibleMoves = false;
 
 let playerCount = 2;
 let currentTurn;
@@ -73,7 +75,7 @@ function draw ()
 	
 	textSize (15);
 	textAlign (RIGHT, BOTTOM);
-	text ("Keybinds: \nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N", CANVAS_WIDTH - 5, CANVAS_HEIGHT);
+	text (KEYBINDS_TEXT, CANVAS_WIDTH - 5, CANVAS_HEIGHT);
 	
 	for (let i = 0; i < grid.length; i++)
 	{
@@ -85,16 +87,18 @@ function draw ()
 
 	if (currentTile != undefined)
 	{
-		for (i = 0; i < possibleMoves.length; i++)
+		if (showAllPossibleMoves)
 		{
-			if (possibleMoves[i] == undefined)
-				continue;
+			for (i = 0; i < possibleMoves.length; i++)
+			{
+				if (possibleMoves[i] == undefined)
+					continue;
 
-			
-			fill (getColor (currentTile.piece));
-			ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius * pieceRadiusMultiplier);
+
+				fill (getColor (currentTile.piece));
+				ellipse (possibleMoves[i].showX, possibleMoves[i].showY, radius * pieceRadiusMultiplier);
+			}
 		}
-
 		drawPiece (mouseX, mouseY, currentTile.piece);
 	}
 }
@@ -199,6 +203,9 @@ function keyPressed ()
 			break;
 		case 67: // C
 			showDebugCoordinates = !showDebugCoordinates;
+			break;
+		case 83: // S
+			showAllPossibleMoves = !showAllPossibleMoves;
 			break;
 		case 49: // Alpha 1
 			playerCount = 1;
