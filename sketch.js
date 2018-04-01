@@ -57,8 +57,6 @@ function setup ()
 
 function draw ()
 {
-	// draw
-	
 	background(51);
 
 	textSize (25);
