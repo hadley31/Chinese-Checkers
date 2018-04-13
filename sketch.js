@@ -5,7 +5,7 @@ const TILE_START_INDICES	= [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
 const ROW_SIZES 		= [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1];
 
 const CANVAS_WIDTH 		= 750;
-const CANVAS_HEIGHT 		= 750;
+const CANVAS_HEIGHT 	= 750;
 
 const GRID_WIDTH 		= 13;
 const GRID_HEIGHT 		= 17;
@@ -153,6 +153,8 @@ function init ()
 	currentTurn = 1;
 }
 
+
+
 function mousePressed ()
 {
 	let tile = getTileUnderMouse();
@@ -188,6 +190,9 @@ function mouseReleased ()
 
 	return false;
 }
+
+
+
 
 function keyPressed ()
 {
@@ -226,6 +231,9 @@ function keyPressed ()
 	}
 }
 
+
+
+
 function nextTurn ()
 {
 	currentTurn++;
@@ -242,6 +250,9 @@ function setTurn (value)
 		currentTurn = 1;
 }
 
+
+
+
 function getIndex (x, y)
 {
 	if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT)
@@ -251,6 +262,9 @@ function getIndex (x, y)
 
 	return x + y * GRID_WIDTH;
 }
+
+
+
 
 function getTileUnderMouse ()
 {
@@ -263,10 +277,168 @@ function getTileUnderMouse ()
 	}
 }
 
+
+
+
+function drawPiece (x, y, piece)
+{
+	let color = getColor (piece);
+	fill (color);
+	ellipse (x, y, radius * 2 * pieceRadiusMultiplier);
+}
+
+
+
+
 function getTile (x, y)
 {
 	return grid[getIndex (x, y)];
 }
+
+
+
+function validMove (from, to)
+{
+	if (from == undefined || to == undefined)
+		return false;
+
+	if (debugMove)
+		return true;
+
+	if (to.piece != NO_PIECE)
+		return false;
+	
+	if (possibleMoves.indexOf (to) == -1)
+		return false;
+	
+	return true;
+}
+
+
+
+
+function brightness_value (c)
+{
+	return 0.2126*red(c) + 0.7152*green(c) + 0.0722*blue(c);	
+}
+
+
+
+
+function hasControl (piece)
+{
+	if (debugMove || playerCount < 2)
+	{
+		return true;
+	}
+	if (currentTurn == 1)
+	{
+		if (playerCount == 2)
+		{
+			return piece == GREEN_PIECE || piece == WHITE_PIECE || piece == BLUE_PIECE;
+		}
+		if (playerCount == 3)
+		{
+			return piece == GREEN_PIECE || piece == BLUE_PIECE;
+		}
+		if (playerCount == 4)
+		{
+			return piece == WHITE_PIECE;
+		}
+		if (playerCount == 6)
+		{
+			return piece == GREEN_PIECE;
+		}
+	}
+	if (currentTurn == 2)
+	{
+		if (playerCount == 2)
+		{
+			return piece == RED_PIECE || piece == YELLOW_PIECE || piece == BLACK_PIECE;
+		}
+		if (playerCount == 3)
+		{
+			return piece == BLACK_PIECE || piece == RED_PIECE;
+		}
+		if (playerCount == 4)
+		{
+			return piece == BLUE_PIECE;
+		}
+		if (playerCount == 6)
+		{
+			return piece == BLUE_PIECE;
+		}
+	}
+	if (currentTurn == 3)
+	{
+		if (playerCount == 3)
+		{
+			return piece == YELLOW_PIECE || piece == WHITE_PIECE;
+		}
+		if (playerCount == 4)
+		{
+			return piece == BLACK_PIECE;
+		}
+		if (playerCount == 6)
+		{
+			return piece == BLACK_PIECE;
+		}
+	}
+	if (currentTurn == 4)
+	{
+		if (playerCount == 4)
+		{
+			return piece == YELLOW_PIECE;
+		}
+		if (playerCount == 6)
+		{
+			return piece == RED_PIECE;
+		}
+	}
+	if (currentTurn == 5)
+	{
+		if (playerCount == 6)
+		{
+			return piece == YELLOW_PIECE;
+		}
+	}
+	if (currentTurn == 6)
+	{
+		if (playerCount == 6)
+		{
+			return piece == WHITE_PIECE;
+		}
+	}
+	return false;
+}
+
+
+
+
+function getColor (piece)
+{
+	switch (piece)
+	{
+		default:
+		case 0:
+			return color(0, 0, 0);
+		case 1:
+			return color(0, 255, 0);
+		case 2:
+			return color(0, 0, 255);
+		case 3:
+			return color(0, 0, 0);
+		case 4:
+			return color(255, 0, 0);
+		case 5:
+			return color(255, 235, 4);
+		case 6:
+			return color(255, 255, 255);
+	}
+}
+
+
+
 
 function Tile (x, y)
 {
@@ -395,142 +567,4 @@ function Tile (x, y)
 
 		return possible;
 	};
-}
-
-function validMove (from, to)
-{
-	if (from == undefined || to == undefined)
-		return false;
-
-	if (debugMove)
-		return true;
-
-	if (to.piece != NO_PIECE)
-		return false;
-	
-	if (possibleMoves.indexOf (to) == -1)
-		return false;
-	
-	return true;
-}
-
-function brightness_value (c)
-{
-	return 0.2126*red(c) + 0.7152*green(c) + 0.0722*blue(c);	
-}
-
-function hasControl (piece)
-{
-	if (debugMove || playerCount < 2)
-	{
-		return true;
-	}
-	if (currentTurn == 1)
-	{
-		if (playerCount == 2)
-		{
-			return piece == GREEN_PIECE || piece == WHITE_PIECE || piece == BLUE_PIECE;
-		}
-		if (playerCount == 3)
-		{
-			return piece == GREEN_PIECE || piece == BLUE_PIECE;
-		}
-		if (playerCount == 4)
-		{
-			return piece == WHITE_PIECE;
-		}
-		if (playerCount == 6)
-		{
-			return piece == GREEN_PIECE;
-		}
-	}
-	if (currentTurn == 2)
-	{
-		if (playerCount == 2)
-		{
-			return piece == RED_PIECE || piece == YELLOW_PIECE || piece == BLACK_PIECE;
-		}
-		if (playerCount == 3)
-		{
-			return piece == BLACK_PIECE || piece == RED_PIECE;
-		}
-		if (playerCount == 4)
-		{
-			return piece == BLUE_PIECE;
-		}
-		if (playerCount == 6)
-		{
-			return piece == BLUE_PIECE;
-		}
-	}
-	if (currentTurn == 3)
-	{
-		if (playerCount == 3)
-		{
-			return piece == YELLOW_PIECE || piece == WHITE_PIECE;
-		}
-		if (playerCount == 4)
-		{
-			return piece == BLACK_PIECE;
-		}
-		if (playerCount == 6)
-		{
-			return piece == BLACK_PIECE;
-		}
-	}
-	if (currentTurn == 4)
-	{
-		if (playerCount == 4)
-		{
-			return piece == YELLOW_PIECE;
-		}
-		if (playerCount == 6)
-		{
-			return piece == RED_PIECE;
-		}
-	}
-	if (currentTurn == 5)
-	{
-		if (playerCount == 6)
-		{
-			return piece == YELLOW_PIECE;
-		}
-	}
-	if (currentTurn == 6)
-	{
-		if (playerCount == 6)
-		{
-			return piece == WHITE_PIECE;
-		}
-	}
-	return false;
-}
-
-function drawPiece (x, y, piece)
-{
-	let color = getColor (piece);
-	fill (color);
-	ellipse (x, y, radius * 2 * pieceRadiusMultiplier);
-}
-
-function getColor (piece)
-{
-	switch (piece)
-	{
-		default:
-		case 0:
-			return color(0, 0, 0);
-		case 1:
-			return color(0, 255, 0);
-		case 2:
-			return color(0, 0, 255);
-		case 3:
-			return color(0, 0, 0);
-		case 4:
-			return color(255, 0, 0);
-		case 5:
-			return color(255, 235, 4);
-		case 6:
-			return color(255, 255, 255);
-	}
 }
