@@ -1,3 +1,8 @@
+/**
+ * 
+ * @author hadley31
+ * 
+ */
 
 //#region Constants
 
