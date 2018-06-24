@@ -74,8 +74,14 @@ function draw ()
 	}
 	
 	textAlign (RIGHT, TOP);
-	text ("PLAYERS: " + playerCount + "\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
+	text ("PLAYERS: " + playerCount, CANVAS_WIDTH, 0);
 	
+	fill (getColor (currentTurn));
+	
+	test ("\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
+	
+	fill (255);
+		
 	textSize (15);
 	textAlign (RIGHT, BOTTOM);
 	text (KEYBINDS_TEXT, CANVAS_WIDTH - 5, CANVAS_HEIGHT);
