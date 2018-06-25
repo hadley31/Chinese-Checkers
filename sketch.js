@@ -76,8 +76,6 @@ function draw ()
 	textAlign (RIGHT, TOP);
 	text ("PLAYERS: " + playerCount, CANVAS_WIDTH, 0);
 	
-	fill (getColor (currentTurn));
-	
 	test ("\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
 	
 	fill (255);
