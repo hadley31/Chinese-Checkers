@@ -5,6 +5,7 @@
  */
 
 //#region Constants
+const VERSION = 1.0;
 
 const TILE_START_INDICES	= [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
 const ROW_SIZES 		= [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1];
@@ -55,6 +56,8 @@ let currentTurn;
 
 function setup ()
 {
+	console.log (VERSION);
+
 	createCanvas (CANVAS_WIDTH, CANVAS_HEIGHT);
 	
 	init();
@@ -74,11 +77,23 @@ function draw ()
 	}
 	
 	textAlign (RIGHT, TOP);
-	text ("PLAYERS: " + playerCount, CANVAS_WIDTH, 0);
+	text (playerCount + " PLAYER(S)", CANVAS_WIDTH, 0);
+
+	let xOff = 0;
+	let yOff = 0;
+
+	for (let p of getTurnPieces ())
+	{
+		drawPiece (CANVAS_WIDTH - xOff * radius * 2 - radius, textSize () + radius + yOff * radius * 2, p);
+		xOff++;
+		if (xOff >= 3)
+		{
+			yOff++;
+			xOff = 0;
+		}
+	}
 	
-	fill (getColor (currentTurn - 1));
-	
-	text ("\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
+	//text ("\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
 	
 	fill (255);
 		
@@ -336,91 +351,99 @@ function brightness_value (c)
 
 
 
-function hasControl (piece)
+function getTurnPieces ()
 {
 	if (debugMove || playerCount < 2)
 	{
-		return true;
+		return [BLACK_PIECE, RED_PIECE, YELLOW_PIECE, BLUE_PIECE, GREEN_PIECE, WHITE_PIECE];
 	}
 	if (currentTurn == 1)
 	{
 		if (playerCount == 2)
 		{
-			return piece == GREEN_PIECE || piece == WHITE_PIECE || piece == BLUE_PIECE;
+			return [BLUE_PIECE, GREEN_PIECE, WHITE_PIECE];
 		}
 		if (playerCount == 3)
 		{
-			return piece == GREEN_PIECE || piece == BLUE_PIECE;
+			return [BLUE_PIECE, GREEN_PIECE];
 		}
 		if (playerCount == 4)
 		{
-			return piece == WHITE_PIECE;
+			return [WHITE_PIECE];
 		}
 		if (playerCount == 6)
 		{
-			return piece == GREEN_PIECE;
+			return [GREEN_PIECE];
 		}
 	}
 	if (currentTurn == 2)
 	{
 		if (playerCount == 2)
 		{
-			return piece == RED_PIECE || piece == YELLOW_PIECE || piece == BLACK_PIECE;
+			return [BLACK_PIECE, RED_PIECE, YELLOW_PIECE];
 		}
 		if (playerCount == 3)
 		{
-			return piece == BLACK_PIECE || piece == RED_PIECE;
+			return [RED_PIECE, BLACK_PIECE];
 		}
 		if (playerCount == 4)
 		{
-			return piece == BLUE_PIECE;
+			return [BLUE_PIECE];
 		}
 		if (playerCount == 6)
 		{
-			return piece == BLUE_PIECE;
+			return [BLUE_PIECE];
 		}
 	}
 	if (currentTurn == 3)
 	{
 		if (playerCount == 3)
 		{
-			return piece == YELLOW_PIECE || piece == WHITE_PIECE;
+			return [WHITE_PIECE, YELLOW_PIECE];
 		}
 		if (playerCount == 4)
 		{
-			return piece == BLACK_PIECE;
+			return [BLACK_PIECE];
 		}
 		if (playerCount == 6)
 		{
-			return piece == BLACK_PIECE;
+			return [BLACK_PIECE];
 		}
 	}
 	if (currentTurn == 4)
 	{
 		if (playerCount == 4)
 		{
-			return piece == YELLOW_PIECE;
+			return [YELLOW_PIECE];
 		}
 		if (playerCount == 6)
 		{
-			return piece == RED_PIECE;
+			return [RED_PIECE];
 		}
 	}
 	if (currentTurn == 5)
 	{
 		if (playerCount == 6)
 		{
-			return piece == YELLOW_PIECE;
+			return [YELLOW_PIECE];
 		}
 	}
 	if (currentTurn == 6)
 	{
 		if (playerCount == 6)
 		{
-			return piece == WHITE_PIECE;
+			return [WHITE_PIECE];
 		}
 	}
 	return false;
+}
+
+
+
+
+function hasControl (piece)
+{
+	return contains (getTurnPieces (), piece);
 }
 
 
@@ -578,4 +601,17 @@ function Tile (x, y)
 
 		return possible;
 	};
+}
+
+function contains (arr, element)
+{
+	for (let a of arr)
+	{
+		if (a === element)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
