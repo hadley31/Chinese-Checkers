@@ -31,7 +31,7 @@ const RED_START = [6, 18, 19, 31, 32, 33, 43, 44, 45, 46];
 const YELLOW_START = [52, 53, 54, 55, 65, 66, 67, 79, 80, 92];
 const WHITE_START = [118, 131, 132, 143, 144, 145, 156, 157, 158, 159];
 
-const KEYBINDS_TEXT = "Keybinds:\nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N\nShow Moves: S";
+const KEYBINDS_TEXT = 'Keybinds:\nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N\nShow Moves: S';
 
 const sqrt3 = 1.73205080757;
 
@@ -70,11 +70,11 @@ function draw() {
 
 	if (debugMove) {
 		textAlign(LEFT, TOP);
-		text("DEBUG MODE", 0, 0);
+		text('DEBUG MODE', 0, 0);
 	}
 
 	textAlign(RIGHT, TOP);
-	text(playerCount + " PLAYER(S)", CANVAS_WIDTH, 0);
+	text(playerCount + ' PLAYER(S)', CANVAS_WIDTH, 0);
 
 	let xOff = 0;
 	let yOff = 0;
@@ -429,7 +429,7 @@ class Tile {
 			textAlign(CENTER, CENTER);
 			textSize(radius * 0.5);
 
-			text(getIndex(this.x, this.y) + "\n" + this.x + " , " + this.y, this.showX, this.showY);
+			text(getIndex(this.x, this.y) + '\n' + this.x + ' , ' + this.y, this.showX, this.showY);
 		}
 	};
 
