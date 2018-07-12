@@ -453,7 +453,7 @@ class Tile {
 
 		let adj = this.getAdjacentTiles();
 
-		for (i = 0; i < adj.length; i++) {
+		for (let i = 0; i < adj.length; i++) {
 			if (adj[i] == undefined) {
 				continue;
 			}
