@@ -54,6 +54,7 @@ let showAllPossibleMoves = false;
 let playerCount = 2;
 let currentTurn;
 
+
 function setup() {
 	console.log(VERSION);
 
@@ -61,6 +62,7 @@ function setup() {
 
 	init();
 }
+
 
 function draw() {
 	background(51);
@@ -117,6 +119,7 @@ function draw() {
 	}
 }
 
+
 function init() {
 	grid = new Array(GRID_WIDTH * GRID_HEIGHT);
 
@@ -161,7 +164,6 @@ function init() {
 }
 
 
-
 function mousePressed() {
 	let tile = getTileUnderMouse();
 	if (tile != undefined && tile.piece != NO_PIECE && hasControl(tile.piece)) {
@@ -172,6 +174,7 @@ function mousePressed() {
 	}
 	return false;
 }
+
 
 function mouseReleased() {
 	if (currentTile == undefined) {
@@ -190,8 +193,6 @@ function mouseReleased() {
 
 	return false;
 }
-
-
 
 
 function keyPressed() {
@@ -230,8 +231,6 @@ function keyPressed() {
 }
 
 
-
-
 function nextTurn() {
 	currentTurn++;
 
@@ -239,14 +238,13 @@ function nextTurn() {
 		currentTurn = 1;
 }
 
+
 function setTurn(value) {
 	currentTurn = value;
 
 	if (currentTurn > playerCount || currentTurn < 0)
 		currentTurn = 1;
 }
-
-
 
 
 function getIndex(x, y) {
