@@ -76,7 +76,7 @@ function draw() {
 	}
 
 	textAlign(RIGHT, TOP);
-	text(playerCount + ' PLAYER(S)', CANVAS_WIDTH, 0);
+	text(playerCount + ' PLAYERS', CANVAS_WIDTH, 0);
 
 	let xOff = 0;
 	let yOff = 0;
@@ -89,8 +89,6 @@ function draw() {
 			xOff = 0;
 		}
 	}
-
-	//text ("\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
 
 	fill(255);
 
