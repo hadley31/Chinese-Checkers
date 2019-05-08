@@ -10,9 +10,6 @@ const VERSION = 1.0;
 const TILE_START_INDICES = [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
 const ROW_SIZES = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1];
 
-const CANVAS_WIDTH = 750;
-const CANVAS_HEIGHT = 750;
-
 const GRID_WIDTH = 13;
 const GRID_HEIGHT = 17;
 
@@ -44,7 +41,7 @@ let possibleMoves;
 let offsetX;
 let offsetY;
 
-let radius = 25;
+let radius = 34;
 let pieceRadiusMultiplier = 0.8;
 
 let debugMove = false;
@@ -58,7 +55,10 @@ let currentTurn;
 function setup() {
 	console.log(VERSION);
 
-	createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+	var canvas = createCanvas(windowWidth, windowHeight);
+	canvas.style('display', 'block');
+
+	updateShow();
 
 	init();
 }
@@ -76,13 +76,13 @@ function draw() {
 	}
 
 	textAlign(RIGHT, TOP);
-	text(playerCount + ' PLAYER(S)', CANVAS_WIDTH, 0);
+	text(playerCount + ' Players', width, 0);
 
 	let xOff = 0;
 	let yOff = 0;
 
 	for (let p of getTurnPieces()) {
-		drawPiece(CANVAS_WIDTH - xOff * radius * 2 - radius, textSize() + radius + yOff * radius * 2, p);
+		drawPiece(width - xOff * radius * 2 - radius, textSize() + radius + yOff * radius * 2, p);
 		xOff++;
 		if (xOff >= 3) {
 			yOff++;
@@ -90,13 +90,11 @@ function draw() {
 		}
 	}
 
-	//text ("\nTURN: " + currentTurn, CANVAS_WIDTH, 0);
-
 	fill(255);
 
 	textSize(15);
 	textAlign(RIGHT, BOTTOM);
-	text(KEYBINDS_TEXT, CANVAS_WIDTH - 5, CANVAS_HEIGHT);
+	text(KEYBINDS_TEXT, width - 5, height);
 
 	for (let i = 0; i < grid.length; i++) {
 		if (grid[i] != undefined) {
@@ -120,11 +118,22 @@ function draw() {
 }
 
 
+function windowResized(){
+	resizeCanvas(windowWidth, windowHeight);
+	updateShow();
+}
+
+
+function updateShow(){
+	radius = min(width, height) / 35;
+
+	offsetX = width / 2 - 6 * radius * 2;
+	offsetY = height / 2 - 8 * radius * sqrt3;
+}
+
+
 function init() {
 	grid = new Array(GRID_WIDTH * GRID_HEIGHT);
-
-	offsetX = CANVAS_WIDTH / 2 - 6 * radius * 2;
-	offsetY = CANVAS_HEIGHT / 2 - 8 * radius * sqrt3;
 
 	for (let i = 0; i < GRID_HEIGHT; i++) {
 		let start = TILE_START_INDICES[i];
@@ -278,14 +287,8 @@ function getTile(x, y) {
 
 
 function validMove(from, to) {
-	if (from == undefined || to == undefined)
-		return false;
-
-	if (debugMove)
-		return true;
-
-	if (to.piece != NO_PIECE)
-		return false;
+	if (from === undefined || to === undefined || to.piece !== NO_PIECE) return false;
+	if (debugMove) return true;
 
 	if (possibleMoves.indexOf(to) == -1)
 		return false;
@@ -300,65 +303,33 @@ function brightness_value(c) {
 
 
 function getTurnPieces() {
-	if (debugMove || playerCount < 2) {
-		return [BLACK_PIECE, RED_PIECE, YELLOW_PIECE, BLUE_PIECE, GREEN_PIECE, WHITE_PIECE];
-	}
+	if (debugMove || playerCount < 2) return [BLACK_PIECE, RED_PIECE, YELLOW_PIECE, BLUE_PIECE, GREEN_PIECE, WHITE_PIECE];
 	if (currentTurn == 1) {
-		if (playerCount == 2) {
-			return [BLUE_PIECE, GREEN_PIECE, WHITE_PIECE];
-		}
-		if (playerCount == 3) {
-			return [BLUE_PIECE, GREEN_PIECE];
-		}
-		if (playerCount == 4) {
-			return [WHITE_PIECE];
-		}
-		if (playerCount == 6) {
-			return [GREEN_PIECE];
-		}
+		if (playerCount == 2) return [BLUE_PIECE, GREEN_PIECE, WHITE_PIECE];
+		if (playerCount == 3) return [BLUE_PIECE, GREEN_PIECE];
+		if (playerCount == 4) return [WHITE_PIECE];
+		if (playerCount == 6) return [GREEN_PIECE];
 	}
 	if (currentTurn == 2) {
-		if (playerCount == 2) {
-			return [BLACK_PIECE, RED_PIECE, YELLOW_PIECE];
-		}
-		if (playerCount == 3) {
-			return [RED_PIECE, BLACK_PIECE];
-		}
-		if (playerCount == 4) {
-			return [BLUE_PIECE];
-		}
-		if (playerCount == 6) {
-			return [BLUE_PIECE];
-		}
+		if (playerCount == 2) return [BLACK_PIECE, RED_PIECE, YELLOW_PIECE];
+		if (playerCount == 3) return [RED_PIECE, BLACK_PIECE];
+		if (playerCount == 4) return [BLUE_PIECE];
+		if (playerCount == 6) return [BLUE_PIECE];
 	}
 	if (currentTurn == 3) {
-		if (playerCount == 3) {
-			return [WHITE_PIECE, YELLOW_PIECE];
-		}
-		if (playerCount == 4) {
-			return [BLACK_PIECE];
-		}
-		if (playerCount == 6) {
-			return [BLACK_PIECE];
-		}
+		if (playerCount == 3) return [WHITE_PIECE, YELLOW_PIECE];
+		if (playerCount == 4) return [BLACK_PIECE];
+		if (playerCount == 6) return [BLACK_PIECE];
 	}
 	if (currentTurn == 4) {
-		if (playerCount == 4) {
-			return [YELLOW_PIECE];
-		}
-		if (playerCount == 6) {
-			return [RED_PIECE];
-		}
+		if (playerCount == 4) return [YELLOW_PIECE];
+		if (playerCount == 6) return [RED_PIECE];
 	}
 	if (currentTurn == 5) {
-		if (playerCount == 6) {
-			return [YELLOW_PIECE];
-		}
+		if (playerCount == 6) return [YELLOW_PIECE];
 	}
 	if (currentTurn == 6) {
-		if (playerCount == 6) {
-			return [WHITE_PIECE];
-		}
+		if (playerCount == 6) return [WHITE_PIECE];
 	}
 	return false;
 }
@@ -372,20 +343,20 @@ function hasControl(piece) {
 function getColor(piece) {
 	switch (piece) {
 		default:
-			case 0:
+		case 0:
 			return color(0, 0, 0);
 		case 1:
-				return color(0, 255, 0);
+			return color(20, 144, 20);
 		case 2:
-				return color(0, 0, 255);
+			return color(20, 20, 144);
 		case 3:
-				return color(0, 0, 0);
+			return color(10, 10, 10);
 		case 4:
-				return color(255, 0, 0);
+			return color(160, 20, 20);
 		case 5:
-				return color(255, 235, 4);
+			return color(224, 221, 31);
 		case 6:
-				return color(255, 255, 255);
+			return color(230, 230, 230);
 	}
 }
 
@@ -394,9 +365,15 @@ class Tile {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
-		this.showX = this.y % 2 == 0 ? this.x * radius * 2 + offsetX : this.x * radius * 2 + radius + offsetX;
-		this.showY = this.y * radius * sqrt3 + offsetY;
 		this.piece = 0;
+	}
+
+	get showX(){
+		return this.y % 2 == 0 ? this.x * radius * 2 + offsetX : this.x * radius * 2 + radius + offsetX;
+	}
+
+	get showY(){
+		return this.y * radius * sqrt3 + offsetY;
 	}
 
 
