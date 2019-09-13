@@ -7,7 +7,7 @@
 //#region Constants
 const VERSION = 1.0;
 
-const TILE_START_INDICES = [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
+const TILE_MAP_START_INDICES = [6, 5, 5, 4, 0, 0, 1, 1, 2, 1, 1, 0, 0, 4, 5, 5, 6];
 const ROW_SIZES = [1, 2, 3, 4, 13, 12, 11, 10, 9, 10, 11, 12, 13, 4, 3, 2, 1];
 
 const GRID_WIDTH = 13;
@@ -21,12 +21,14 @@ const RED_PIECE = 4;
 const YELLOW_PIECE = 5;
 const WHITE_PIECE = 6;
 
-const GREEN_START = [173, 174, 175, 176, 187, 188, 189, 200, 201, 214];
-const BLUE_START = [127, 140, 141, 152, 153, 154, 165, 166, 167, 168];
-const BLACK_START = [61, 62, 63, 64, 74, 75, 76, 88, 89, 101];
-const RED_START = [6, 18, 19, 31, 32, 33, 43, 44, 45, 46];
-const YELLOW_START = [52, 53, 54, 55, 65, 66, 67, 79, 80, 92];
-const WHITE_START = [118, 131, 132, 143, 144, 145, 156, 157, 158, 159];
+const START_TILES = {
+	1: [173, 174, 175, 176, 187, 188, 189, 200, 201, 214],
+	2: [127, 140, 141, 152, 153, 154, 165, 166, 167, 168],
+	3: [61, 62, 63, 64, 74, 75, 76, 88, 89, 101],
+	4: [6, 18, 19, 31, 32, 33, 43, 44, 45, 46],
+	5: [52, 53, 54, 55, 65, 66, 67, 79, 80, 92],
+	6: [118, 131, 132, 143, 144, 145, 156, 157, 158, 159]
+}
 
 const KEYBINDS_TEXT = 'Keybinds:\nReset Board: ESC\nSet Player Count: Alpha_1-6\nToggle Debugging mode: D\nToggle coordinates: C\nSkip Turn: N\nShow Moves: S';
 
@@ -55,7 +57,7 @@ let currentTurn;
 function setup() {
 	console.log(VERSION);
 
-	var canvas = createCanvas(windowWidth, windowHeight);
+	let canvas = createCanvas(windowWidth, windowHeight);
 	canvas.style('display', 'block');
 
 	updateShow();
@@ -118,13 +120,13 @@ function draw() {
 }
 
 
-function windowResized(){
+function windowResized() {
 	resizeCanvas(windowWidth, windowHeight);
 	updateShow();
 }
 
 
-function updateShow(){
+function updateShow() {
 	radius = min(width, height) / 35;
 
 	offsetX = width / 2 - 6 * radius * 2;
@@ -136,7 +138,7 @@ function init() {
 	grid = new Array(GRID_WIDTH * GRID_HEIGHT);
 
 	for (let i = 0; i < GRID_HEIGHT; i++) {
-		let start = TILE_START_INDICES[i];
+		let start = TILE_MAP_START_INDICES[i];
 		let end = start + ROW_SIZES[i];
 
 		for (let j = start; j < end; j++) {
@@ -144,32 +146,32 @@ function init() {
 		}
 	}
 
-	for (let i = 0; i < RED_START.length; i++) {
-		grid[RED_START[i]].piece = RED_PIECE;
+	for (let i = 0; i < START_TILES[GREEN_PIECE].length; i++) {
+		grid[START_TILES[GREEN_PIECE][i]].piece = GREEN_PIECE;
 	}
 
-	for (let i = 0; i < BLACK_START.length; i++) {
-		grid[BLACK_START[i]].piece = BLACK_PIECE;
+	for (let i = 0; i < START_TILES[BLUE_PIECE].length; i++) {
+		grid[START_TILES[BLUE_PIECE][i]].piece = BLUE_PIECE;
 	}
 
-	for (let i = 0; i < BLUE_START.length; i++) {
-		grid[BLUE_START[i]].piece = BLUE_PIECE;
+	for (let i = 0; i < START_TILES[BLACK_PIECE].length; i++) {
+		grid[START_TILES[BLACK_PIECE][i]].piece = BLACK_PIECE;
 	}
 
-	for (let i = 0; i < GREEN_START.length; i++) {
-		grid[GREEN_START[i]].piece = GREEN_PIECE;
+	for (let i = 0; i < START_TILES[RED_PIECE].length; i++) {
+		grid[START_TILES[RED_PIECE][i]].piece = RED_PIECE;
 	}
 
-	for (let i = 0; i < WHITE_START.length; i++) {
-		grid[WHITE_START[i]].piece = WHITE_PIECE;
+	for (let i = 0; i < START_TILES[YELLOW_PIECE].length; i++) {
+		grid[START_TILES[YELLOW_PIECE][i]].piece = YELLOW_PIECE;
 	}
 
-	for (let i = 0; i < YELLOW_START.length; i++) {
-		grid[YELLOW_START[i]].piece = YELLOW_PIECE;
+	for (let i = 0; i < START_TILES[WHITE_PIECE].length; i++) {
+		grid[START_TILES[WHITE_PIECE][i]].piece = WHITE_PIECE;
 	}
 
 
-	currentTurn = 1;
+	currentTurn = GREEN_PIECE;
 }
 
 
@@ -192,15 +194,35 @@ function mouseReleased() {
 
 	let tile = getTileUnderMouse();
 	if (validMove(currentTile, tile)) {
-		tile.piece = currentTile.piece;
-		currentTile.piece = NO_PIECE;
-
+		move(currentTile, tile);
 		nextTurn();
 	}
 
 	currentTile = undefined;
 
 	return false;
+}
+
+function validMove(from, to) {
+	if (from === undefined || to === undefined || to.piece !== NO_PIECE) return false;
+	if (debugMove) return true;
+
+	if (possibleMoves.indexOf(to) == -1)
+		return false;
+
+	return true;
+}
+
+function move(from, to) {
+	to.piece = from.piece;
+
+	from.piece = NO_PIECE;
+
+	let winner = checkWin(to.piece);
+
+	if (winner) {
+		print(`Player ${to.piece} wins!`)
+	}
 }
 
 
@@ -286,17 +308,6 @@ function getTile(x, y) {
 }
 
 
-function validMove(from, to) {
-	if (from === undefined || to === undefined || to.piece !== NO_PIECE) return false;
-	if (debugMove) return true;
-
-	if (possibleMoves.indexOf(to) == -1)
-		return false;
-
-	return true;
-}
-
-
 function brightness_value(c) {
 	return 0.2126 * red(c) + 0.7152 * green(c) + 0.0722 * blue(c);
 }
@@ -331,7 +342,7 @@ function getTurnPieces() {
 	if (currentTurn == 6) {
 		if (playerCount == 6) return [WHITE_PIECE];
 	}
-	return false;
+	return [];
 }
 
 
@@ -360,6 +371,33 @@ function getColor(piece) {
 	}
 }
 
+function getOpposite(piece) {
+	return (piece + 2) % 6 + 1;
+}
+
+
+function checkWin(piece) {
+	return checkWinHelper(piece, START_TILES[getOpposite(piece)]);
+}
+
+
+function checkWinAll() {
+	if (checkWin(GREEN_PIECE)) return GREEN_PIECE;
+	if (checkWin(BLUE_PIECE)) return BLUE_PIECE;
+	if (checkWin(BLACK_PIECE)) return BLACK_PIECE;
+	if (checkWin(RED_PIECE)) return RED_PIECE;
+	if (checkWin(YELLOW_PIECE)) return YELLOW_PIECE;
+	if (checkWin(WHITE_PIECE)) return WHITE_PIECE;
+	return NO_PIECE;
+}
+
+function checkWinHelper(piece, array) {
+	for (const tile_index of array) {
+		if (grid[tile_index].piece !== piece)
+			return false;
+	}
+	return true;
+}
 
 class Tile {
 	constructor(x, y) {
@@ -368,11 +406,11 @@ class Tile {
 		this.piece = 0;
 	}
 
-	get showX(){
+	get showX() {
 		return this.y % 2 == 0 ? this.x * radius * 2 + offsetX : this.x * radius * 2 + radius + offsetX;
 	}
 
-	get showY(){
+	get showY() {
 		return this.y * radius * sqrt3 + offsetY;
 	}
 
